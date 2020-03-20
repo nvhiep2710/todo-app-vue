@@ -27,6 +27,18 @@ const actions = {
     }
   },
 
+  async fetchTodoListSearch({ commit }, payload) {
+    try {
+      const res = await api.get(`/todo?textSearch=${payload}`);
+      if (res.data.status == 200) {
+        commit("SET_TODO_LIST", res.data.data);
+        commit("SET_TOTAL", res.data.total);
+      }
+    } catch (error) {
+      // todo
+    }
+  },
+
   async addTodo({ dispatch }, payload) {
     try {
       const res = await api.post("/todo/add", { title: payload });

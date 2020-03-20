@@ -33,12 +33,10 @@ const actions = {
         email: payload.email,
         password: payload.password
       });
-      console.log(res.data);
       if (res.data.status == 400) {
         commit("SET_ERROR_PASSWORD", true);
       }
       if (res.data.status == 200) {
-        console.log(res.data);
         commit("LOGIN_SUCCESS", res.data.data.user);
         commit("SET_ACCESS_TOKEN", res.data.data.access_token);
         router.push({ name: "todo" });
@@ -59,9 +57,43 @@ const actions = {
         commit("SET_ERROR_REGISTER", true);
       }
       if (res.data.status == 200) {
-        console.log(res.data);
         commit("REGISTER_SUCCESS", true);
         router.push({ name: "login" });
+      }
+    } catch (error) {
+      // todo
+    }
+  },
+
+  // login google
+  async loginGoogle({ commit }, payload) {
+    try {
+      const res = await api.post("/login-social", {
+        social_id: payload.social_id,
+        social_type: "Google",
+        name: payload.name
+      });
+      if (res.data.status == 200) {
+        commit("LOGIN_SUCCESS", res.data.data.user);
+        commit("SET_ACCESS_TOKEN", res.data.data.access_token);
+        router.push({ name: "todo" });
+      }
+    } catch (error) {
+      // todo
+    }
+  },
+
+  // login google
+  async loginFacebook({ commit }, payload) {
+    try {
+      const res = await api.post("/login-social", {
+        social_id: payload,
+        social_type: "Facebook"
+      });
+      if (res.data.status == 200) {
+        commit("LOGIN_SUCCESS", res.data.data.user);
+        commit("SET_ACCESS_TOKEN", res.data.data.access_token);
+        router.push({ name: "todo" });
       }
     } catch (error) {
       // todo

@@ -79,13 +79,18 @@ export default {
     ...mapActions("auth", ["register"]),
     ...mapMutations("auth", ["SET_ERROR_REGISTER"]),
     handleResetError() {},
-    submit() {
+    async submit() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        this.register({
+        await this.register({
           name: this.name,
           email: this.email,
           password: this.password
+        });
+        this.$notify({
+          type: "success",
+          title: "Todo Notification",
+          text: "Register success !!!"
         });
       }
     }
@@ -100,7 +105,8 @@ export default {
   border-radius: 1rem;
   padding: 30px;
   width: 500px;
-  // background-image: url("https://image.freepik.com/free-vector/abstract-colorful-background_1159-3704.jpg");
+  height: 577px;
+  margin: 100px auto 0;
   h2 {
     text-align: center;
     padding: 10px;
@@ -150,7 +156,8 @@ export default {
     button {
       padding: 0.5rem 1rem;
       border: none;
-      background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
+      // background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%);
+      background-color: #0171e3;
       width: 100%;
       color: white;
       cursor: pointer;
@@ -159,10 +166,9 @@ export default {
     button:focus {
       outline: none;
     }
-    &___signup {
-      font-size: 12px;
+    p {
       text-align: center;
-      padding: 10px 0 0 0;
+      padding: 18px 0px 30px;
     }
   }
 }

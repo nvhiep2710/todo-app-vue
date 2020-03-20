@@ -1,6 +1,12 @@
 <template>
   <div class="container">
     <h1 class="container__title">Todos</h1>
+    <div class="container__search" id="search">
+      <input type="text" v-model="textSearch" @input="submitSearch" />
+      <div class="image">
+        <img src="../../assets/search.svg" alt />
+      </div>
+    </div>
     <div class="container__content">
       <div class="container__content--header">
         <img src="../../assets/down-arrow.svg" class="arrowSelect" @click="selectAll" alt />
@@ -38,22 +44,19 @@
         </ul>
         <span v-if="handleCheck" class="clear" @click="handleClearComplete">Clear Complete</span>
       </div>
-      <h4>Hello, {{infoUser.name}}</h4>
-      <a @click="handleLogout">Logout</a>
     </div>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-
 export default {
-  components: {},
   data() {
     return {
       isCompleted: false,
       inputValue: null,
       isSelect: false,
       isFilter: null,
+      textSearch: "",
       option: [
         {
           id: 0,
@@ -74,7 +77,6 @@ export default {
   },
   computed: {
     ...mapState("todo", ["todoList", "total"]),
-    ...mapState("auth", ["infoUser"]),
     handleCheck() {
       return this.todoList.some(itm => itm.status === true);
     }
@@ -89,9 +91,12 @@ export default {
       "deleteTodo",
       "updateTodo",
       "changeStatusAll",
-      "deleteComplete"
+      "deleteComplete",
+      "fetchTodoListSearch"
     ]),
-    ...mapActions("auth", ["logout"]),
+    submitSearch(e) {
+      this.fetchTodoListSearch(e.target.value);
+    },
     async handleLogout() {
       await this.logout();
     },
@@ -139,8 +144,34 @@ export default {
 .container {
   width: 550px;
   box-shadow: coral;
-  background-color: #fff;
   color: #4d4d4d;
+  flex-direction: column;
+  justify-content: start;
+  margin: 0 auto;
+  &__search {
+    width: 550px;
+    height: 50px;
+    display: flex;
+    background-color: #fff;
+    position: relative;
+    margin-bottom: 11px;
+    .image {
+      width: 30px;
+      height: 30px;
+      vertical-align: middle;
+      position: absolute;
+      top: 12px;
+      right: 15px;
+    }
+    input {
+      width: 92%;
+      padding: 10px;
+      font-size: 30px;
+      font-weight: 300;
+      border: none;
+      outline: none;
+    }
+  }
   &__title {
     text-align: center;
     color: #ead7d7;
@@ -148,16 +179,18 @@ export default {
     font-size: 70px;
     font-weight: 300;
     letter-spacing: 1.7px;
+    padding-bottom: 55px;
   }
   &__content {
     width: auto;
     margin-bottom: 30px;
     box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.5);
+    background: #fff;
     &--header {
       display: flex;
       align-items: center;
       .arrowSelect {
-        width: 20px;
+        width: 40px;
         height: 20px;
         padding-left: 20px;
       }
@@ -215,7 +248,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 18px;
+      padding: 18px;
       ul {
         .active {
           transition: 0.3 ease-in-out;

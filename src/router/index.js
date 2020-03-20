@@ -27,6 +27,17 @@ export default new Router({
           }
         },
         {
+          path: "profile",
+          name: "profile",
+          component: () => import("@/components/views/Profile"),
+          beforeEnter(to, from, next) {
+            if (!store.state.auth.token) next({ name: "login" });
+            else {
+              next();
+            }
+          }
+        },
+        {
           path: "login",
           name: "login",
           component: () => import("@/components/views/Login"),
