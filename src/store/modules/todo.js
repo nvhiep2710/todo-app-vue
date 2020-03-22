@@ -16,7 +16,7 @@ const mutations = {
 const actions = {
   async fetchTodoList({ commit }, payload) {
     try {
-      const url = payload != null ? `/todo?status=${payload}` : `/todo`;
+      const url = payload != null ? `/todos?status=${payload}` : `/todos`;
       const res = await api.get(url);
       if (res.data.status == 200) {
         commit("SET_TODO_LIST", res.data.data);
@@ -29,7 +29,7 @@ const actions = {
 
   async fetchTodoListSearch({ commit }, payload) {
     try {
-      const res = await api.get(`/todo?textSearch=${payload}`);
+      const res = await api.get(`/todos?textSearch=${payload}`);
       if (res.data.status == 200) {
         commit("SET_TODO_LIST", res.data.data);
         commit("SET_TOTAL", res.data.total);
@@ -41,7 +41,7 @@ const actions = {
 
   async addTodo({ dispatch }, payload) {
     try {
-      const res = await api.post("/todo/add", { title: payload });
+      const res = await api.post("/todos", { title: payload });
       if (res.data.status == 200) {
         dispatch("fetchTodoList");
       }
@@ -52,7 +52,7 @@ const actions = {
 
   async updateTodo({ dispatch }, payload) {
     try {
-      const res = await api.patch(`/todo/${payload.id}`, {
+      const res = await api.put(`/todos/${payload.id}`, {
         status: payload.status
       });
       if (res.data.status == 200) {
@@ -65,7 +65,7 @@ const actions = {
 
   async deleteTodo({ dispatch }, payload) {
     try {
-      const res = await api.delete(`/todo/${payload.id}`);
+      const res = await api.delete(`/todos/${payload.id}`);
       if (res.data.status == 200) {
         dispatch("fetchTodoList", payload.filter);
       }
@@ -76,7 +76,7 @@ const actions = {
 
   async changeStatusAll({ dispatch }, payload) {
     try {
-      const res = await api.post("/todo/change-status", {
+      const res = await api.put("/todos", {
         status: payload.status
       });
       if (res.data.status == 200) {
@@ -89,7 +89,7 @@ const actions = {
 
   async deleteComplete({ dispatch }, payload) {
     try {
-      const res = await api.delete("/todo/delete/complete");
+      const res = await api.delete("/todos");
       if (res.data.status == 200) {
         dispatch("fetchTodoList", payload);
       }
